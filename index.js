@@ -56,10 +56,9 @@ var movies = [
       newTitle = req.query.title
       newYear = Number(req.query.year)
       newRating = req.query.rating
-      var newMovie = [{title: newTitle, year: newYear, rating: newRating}]
+      movies.push({title: newTitle, year: newYear, rating: newRating})
      if (newTitle && newYear && newYear>=1888 && newYear<=2020){
      if (newRating){
-      movies = movies.concat(newMovie)
       res.send(
           {
                status:200,
@@ -67,8 +66,7 @@ var movies = [
           }
       )
     }else{
-      newMovie = [{title: newTitle, year: newYear, rating: 4}]
-      movies = movies.concat(newMovie)
+      movies.push({title: newTitle, year: newYear, rating: 4})
       res.send(
           {
                status:200,
@@ -99,14 +97,25 @@ var movies = [
         }
        )
      })
+
     //delete
-    app.get('/movies/delete', (req, res) => {
-         res.send(
-         {
-           status:200,
-           data:"ok"
-         }
-       )
+    app.get('/movies/delete/:ID', (req, res) => {
+      data = req.params;
+      let index
+      let exist = false;
+      for(var i = 0; i < movies.length; i++){
+        if(data.ID == movies[i].id){
+          exist = true;
+          index= i;
+        }
+      }
+      if (exist){
+        movies.splice(index,1);
+        res.send({status:200, data:movies})
+      }else {
+        res.send({status:404, error:true, message:'the movie <ID> does not exist'})
+      }
+        
      })
 
      app.get('/movies/read/by-date', (req, res) => {
@@ -148,7 +157,7 @@ var movies = [
     app.get('/movies/read/id/:ID', (req, res) => {
       data = req.params;
       var movie = "";
-      var exist = false;
+      let exist = false;
       movies.map(item =>{
         if(data.ID == item.id){
           exist = true;
