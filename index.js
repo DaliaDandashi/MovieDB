@@ -2,10 +2,10 @@ const express = require('express')
 const app = express()
 const port = 3000
 const movies = [
-  { title: 'Jaws', year: 1975, rating: 8 },
-  { title: 'Avatar', year: 2009, rating: 7.8 },
-  { title: 'Brazil', year: 1985, rating: 8 },
-  { title: 'الإرهاب والكباب‎', year: 1992, rating: 6.2 }
+  { title: 'Jaws', year: 1975, rating: 8, id:12},
+  { title: 'Avatar', year: 2009, rating: 7.8, id:34 },
+  { title: 'Brazil', year: 1985, rating: 8, id:56 },
+  { title: 'الإرهاب والكباب‎', year: 1992, rating: 6.2, id:78 }
 ]
 
   app.get('/', (req, res) => {
@@ -89,15 +89,6 @@ const movies = [
        )
      })
 
-     app.get('movies/read/by-date', (req,res)=>{
-       res.send(
-         {
-           status:200,
-           data:"MOVIES"
-         }
-       )
-     })
-
      app.get('/movies/read/by-date', (req, res) => {
       res.send(
           {
@@ -132,6 +123,23 @@ const movies = [
                data:movies1
           }
       )
+    })
+
+    app.get('/movies/read/id/:ID', (req, res) => {
+      data = req.params;
+      var movie = "";
+      var exist = false;
+      movies.map(item =>{
+        if(data.ID == item.id){
+          exist = true;
+          movie= item;
+        }
+      })
+      if (exist){
+        res.send({status:200, data:movie})
+      }else{
+        res.send({status:404, error:true, message:'the movie <ID> does not exist'})
+      }
     })
     
   app.listen(port, () => {
