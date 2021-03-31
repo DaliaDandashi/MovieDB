@@ -1,6 +1,9 @@
+//import bodyParser from 'body-parser';
 const express = require('express')
 const app = express()
 const port = 3000
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: false }));
 var movies = [
   { title: 'Jaws', year: 1975, rating: 8, id:12},
   { title: 'Avatar', year: 2009, rating: 7.8, id:34 },
@@ -52,13 +55,13 @@ var movies = [
       })
 
       //create
-    app.get('/movies/add', (req, res) => {
+    app.post('/movies/add', (req, res) => {
       newTitle = req.query.title
       newYear = Number(req.query.year)
       newRating = req.query.rating
-      movies.push({title: newTitle, year: newYear, rating: newRating})
      if (newTitle && newYear && newYear>=1888 && newYear<=2020){
      if (newRating){
+      movies.push({title: newTitle, year: newYear, rating: newRating})
       res.send(
           {
                status:200,
@@ -89,7 +92,7 @@ var movies = [
         )
       })
      //update
-   app.get('/movies/update/ID', (req, res) => {
+   app.put('/movies/update/ID', (req, res) => {
     
     data = req.params;
     newTitle = req.query.title
@@ -115,7 +118,7 @@ var movies = [
     })
 
     //delete
-    app.get('/movies/delete/:ID', (req, res) => {
+    app.delete('/movies/delete/:ID', (req, res) => {
       data = req.params;
       let index
       let exist = false;
